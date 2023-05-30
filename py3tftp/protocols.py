@@ -401,8 +401,7 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
         logger.debug('received: {}'.format(data.decode()))
 
         first_packet = self.packet_factory.from_bytes(data)
-        protocol = self.select_protocol(first_packet)
-        logging.info(addr)
+        protocol = self.select_protocol(first_packet, addr)
         file_handler_cls = self.select_file_handler(first_packet)
 
         connect = self.loop.create_datagram_endpoint(
@@ -428,7 +427,8 @@ class TFTPServerProtocol(BaseTFTPServerProtocol):
         else:
             raise ProtocolException('Received incompatible request, ignoring.')
 
-    def select_file_handler(self, packet):
+    def select_file_handler(self, packet, addr):
+        logger.info(addr)
         if packet.is_wrq():
             return lambda filename, opts: file_io.FileWriter(
                 filename, opts, packet.mode)
