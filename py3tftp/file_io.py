@@ -22,6 +22,7 @@ def sanitize_fname(fname):
     try:
         logger.info('ABS PATH:')
         logger.info(abs_path)
+        logger.info(Path.cwd())
         abs_path.relative_to(Path.cwd())
     except ValueError:
         raise FileNotFoundError
