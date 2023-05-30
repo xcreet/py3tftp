@@ -43,8 +43,13 @@ class FileReader(object):
             if len(circuit_id_str) % 2 != 0:
                 circuit_id_str = '0' + circuit_id_str
             circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
-            logger.info(lease.ip)
-            # logger.info(circuit_id)
+            logger.info('Requesting IP: ' + self.addr[0])
+            logger.info('Found a lease for:' + lease.ip)
+            if self.addr[0] == '127.0.0.1':
+                # if self.addr[0]==lease.ip:
+                filename = circuit_id + '.cfg'
+                logger.info('Serving filename: ' + filename)
+                return filename
 
     """
     A wrapper around a regular file that implements:
@@ -58,8 +63,8 @@ class FileReader(object):
     def __init__(self, fname, chunk_size=0, mode=None, addr=None):
         self._f = None
         self.addr = addr
-        self.hijack_fname(fname)
-        self.fname = sanitize_fname(fname)
+        new_fname = self.hijack_fname(fname)
+        self.fname = sanitize_fname(new_fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
         self.finished = False
