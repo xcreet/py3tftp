@@ -6,7 +6,12 @@ from py3tftp import tftp_parsing
 from py3tftp.exceptions import ProtocolException
 from py3tftp.tftp_packet import TFTPPacketFactory
 
+from dhcp_leases import DhcpLeases
+import binascii
+
 logger = logging.getLogger(__name__)
+
+LEASE_PATH = '/data/dhcpd.leases'
 
 
 class BaseTFTPProtocol(asyncio.DatagramProtocol):
@@ -99,15 +104,32 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
         if pkt.is_err():
             self.handle_err_pkt()
 
+    def hijack_fname(self, fname):
+        leases = DhcpLeases(LEASE_PATH)
+        for lease in leases.get():
+            circuit_id_str = lease.options['agent.circuit-id'].replace(':', '')
+            if len(circuit_id_str) % 2 != 0:
+                circuit_id_str = '0' + circuit_id_str
+            circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
+            logger.info('Requesting IP: ' + self.remote_addr[0])
+            logger.info('Found a lease for:' + lease.ip)
+            if self.addr[0] == '127.0.0.1':
+                # if self.addr[0]==lease.ip:
+                filename = circuit_id + '.cfg'
+                logger.info('Serving filename: ' + filename)
+                return filename.encode('ascii')
+
     def set_proto_attributes(self):
         """
         Sets the self.filename , self.opts, and self.r_opts.
         The caller should handle any exceptions and react accordingly
         ie. send error packet, close connection, etc.
         """
+
         logger.info('attttr')
         logger.info(self.packet.fname)
         logger.info(self.remote_addr)
+        logger.info(self.hijack_fname(self.packet.fname))
         self.filename = self.packet.fname
         self.r_opts = self.packet.r_opts
         self.opts = {**self.default_opts, **self.extra_opts, **self.r_opts}
@@ -385,7 +407,7 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
         """
         raise NotImplementedError
 
-    def select_file_handler(self, first_packet, addr):
+    def select_file_handler(self, first_packet):
         """
         Selects a class that implements the correct interface
         to handle the input/output for a tftp transfer.
@@ -405,7 +427,7 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
 
         first_packet = self.packet_factory.from_bytes(data)
         protocol = self.select_protocol(first_packet)
-        file_handler_cls = self.select_file_handler(first_packet, addr)
+        file_handler_cls = self.select_file_handler(first_packet)
 
         connect = self.loop.create_datagram_endpoint(
             lambda: protocol(data, file_handler_cls, addr, self.extra_opts),
@@ -430,11 +452,11 @@ class TFTPServerProtocol(BaseTFTPServerProtocol):
         else:
             raise ProtocolException('Received incompatible request, ignoring.')
 
-    def select_file_handler(self, packet, addr):
+    def select_file_handler(self, packet):
         logger.info(addr)
         if packet.is_wrq():
             return lambda filename, opts: file_io.FileWriter(
                 filename, opts, packet.mode)
         else:
             return lambda filename, opts: file_io.FileReader(
-                filename, opts, packet.mode, addr)
+                filename, opts, packet.mode)
