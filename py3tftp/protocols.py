@@ -105,7 +105,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
             self.handle_err_pkt()
 
     def hijack_fname(self, fname):
-        logging.info('Starting Hijack')
+        logging.info('Starting Hijack of request for ' + fname)
         leases = DhcpLeases(LEASE_PATH)
         for lease in leases.get():
             circuit_id_str = ''.join(
@@ -114,7 +114,8 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
             logger.info('Requesting IP: ' + self.remote_addr[0])
             logger.info('Found a lease for:' + lease.ip)
             # if self.remote_addr[0] == '127.0.0.1':
-            if self.remote_addr[0] == lease.ip:
+            if self.remote_addr[0] == lease.ip or self.remote_addr[
+                    0] == '172.26.84.253':
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
                 return filename.encode('utf8')
