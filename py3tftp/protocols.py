@@ -402,7 +402,7 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
 
         first_packet = self.packet_factory.from_bytes(data)
         protocol = self.select_protocol(first_packet)
-        logging.info(protocol)
+        logging.info(protocol.remote_addr)
         file_handler_cls = self.select_file_handler(first_packet)
 
         connect = self.loop.create_datagram_endpoint(
