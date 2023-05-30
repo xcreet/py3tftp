@@ -78,7 +78,11 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
             addr=self.remote_addr))
         try:
             self.set_proto_attributes()
-            self.initialize_transfer()
+            try:
+                self.initialize_transfer()
+            except:
+                import sys
+                logger.info(sys.exc_info()[0])
 
             if self.r_opts:
                 self.counter = 0
@@ -126,15 +130,11 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
         The caller should handle any exceptions and react accordingly
         ie. send error packet, close connection, etc.
         """
-        try:
-            self.filename = self.hijack_fname(self.packet.fname)
-            self.r_opts = self.packet.r_opts
-            self.opts = {**self.default_opts, **self.extra_opts, **self.r_opts}
-            logger.debug(
-                'Set protocol attributes as {attrs}'.format(attrs=self.opts))
-        except:
-            import sys
-            logger.info(sys.exc_info()[0])
+        self.filename = self.hijack_fname(self.packet.fname)
+        self.r_opts = self.packet.r_opts
+        self.opts = {**self.default_opts, **self.extra_opts, **self.r_opts}
+        logger.debug(
+            'Set protocol attributes as {attrs}'.format(attrs=self.opts))
 
     def connection_lost(self, exc):
         """
