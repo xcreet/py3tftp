@@ -105,6 +105,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
             self.handle_err_pkt()
 
     def hijack_fname(self, fname):
+        logging.info('Starting Hijack')
         leases = DhcpLeases(LEASE_PATH)
         for lease in leases.get():
             circuit_id_str = ''.join(
@@ -117,6 +118,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
                 return filename.encode('utf8')
+        return fname
 
     def set_proto_attributes(self):
         """
