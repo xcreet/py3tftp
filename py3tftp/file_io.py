@@ -10,20 +10,6 @@ logger = logging.getLogger(__name__)
 LEASE_PATH = '/data/dhcpd.leases'
 
 
-def hijack_fname(fname):
-    logger.info('GHOST IN THE SYSTEM!')
-    logger.info(fname)
-
-    leases = DhcpLeases(LEASE_PATH)
-    for lease in leases.get():
-        circuit_id_str = lease.options['agent.circuit-id'].replace(':', '')
-        if len(circuit_id_str) % 2 != 0:
-            circuit_id_str = '0' + circuit_id_str
-        circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
-        logger.info(lease.data)
-        logger.info(circuit_id)
-
-
 def sanitize_fname(fname):
     """
     Ensures that fname is a path under the current working directory.
@@ -46,6 +32,20 @@ def sanitize_fname(fname):
 
 
 class FileReader(object):
+    def hijack_fname(self, fname):
+        logger.info('GHOST IN THE SYSTEM!')
+        logger.info(fname)
+        logger.info(self)
+
+        leases = DhcpLeases(LEASE_PATH)
+        for lease in leases.get():
+            circuit_id_str = lease.options['agent.circuit-id'].replace(':', '')
+            if len(circuit_id_str) % 2 != 0:
+                circuit_id_str = '0' + circuit_id_str
+            circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
+            logger.info(lease.data)
+            logger.info(circuit_id)
+
     """
     A wrapper around a regular file that implements:
     - read_chunk - for closing the file when bytes read is
@@ -54,9 +54,10 @@ class FileReader(object):
     interfaces.
     When it goes out of scope, it ensures the file is closed.
     """
+
     def __init__(self, fname, chunk_size=0, mode=None):
         self._f = None
-        hijack_fname(fname)
+        self.hijack_fname(fname)
         self.fname = sanitize_fname(fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
