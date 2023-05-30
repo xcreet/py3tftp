@@ -1,11 +1,14 @@
 import os
 from pathlib import Path
 from .netascii import Netascii
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def hijack_fname(fname):
-    print('GHOST IN THE SYSTEM!')
-    print(fname)
+    logger.debug('GHOST IN THE SYSTEM!')
+    logger.debug(fname)
 
 
 def sanitize_fname(fname):
