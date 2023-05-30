@@ -374,7 +374,7 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
         self.extra_opts = extra_opts
         self.packet_factory = TFTPPacketFactory()
 
-    def select_protocol(self, request):
+    def select_protocol(self, request, addr):
         """
         Selects an asyncio.Protocol-compatible protocol to
         feed to an event loop's 'create_datagram_endpoint'
