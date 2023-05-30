@@ -118,7 +118,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
                 logger.info(type(circuit_id))
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
-                return filename.encode('utf8')
+                return filename
 
     def set_proto_attributes(self):
         """
