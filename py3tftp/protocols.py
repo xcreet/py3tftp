@@ -115,7 +115,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
             logger.info('Found a lease for:' + lease.ip)
             # if self.remote_addr[0] == '127.0.0.1':
             if self.remote_addr[0] == lease.ip:
-                filename = '/ztp/' + circuit_id + '.cfg'
+                filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
                 return filename.encode('utf8')
         return fname
