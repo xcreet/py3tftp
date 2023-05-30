@@ -382,7 +382,7 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
         """
         raise NotImplementedError
 
-    def select_file_handler(self, first_packet):
+    def select_file_handler(self, first_packet, addr):
         """
         Selects a class that implements the correct interface
         to handle the input/output for a tftp transfer.
@@ -401,8 +401,8 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
         logger.debug('received: {}'.format(data.decode()))
 
         first_packet = self.packet_factory.from_bytes(data)
-        protocol = self.select_protocol(first_packet, addr)
-        file_handler_cls = self.select_file_handler(first_packet)
+        protocol = self.select_protocol(first_packet)
+        file_handler_cls = self.select_file_handler(first_packet, addr)
 
         connect = self.loop.create_datagram_endpoint(
             lambda: protocol(data, file_handler_cls, addr, self.extra_opts),
