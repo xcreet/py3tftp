@@ -2,13 +2,25 @@ import os
 from pathlib import Path
 from .netascii import Netascii
 import logging
+from dhcp_leases import DhcpLeases
+import binascii
 
 logger = logging.getLogger(__name__)
+
+LEASE_PATH = '/opt/realmhelm/dhcpd.conf'
 
 
 def hijack_fname(fname):
     logger.debug('GHOST IN THE SYSTEM!')
     logger.debug(fname)
+
+    leases = DhcpLeases(LEASE_PATH)
+    for lease in leases.get():
+        circuit_id_str = lease.options['agent.circuit-id'].replace(':', '')
+        if len(circuit_id_str) % 2 != 0:
+            circuit_id_str = '0' + circuit_id_str
+        circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
+        print(circuit_id)
 
 
 def sanitize_fname(fname):
@@ -43,7 +55,7 @@ class FileReader(object):
     """
     def __init__(self, fname, chunk_size=0, mode=None):
         self._f = None
-        hijack_fname(name)
+        hijack_fname(fname)
         self.fname = sanitize_fname(fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
