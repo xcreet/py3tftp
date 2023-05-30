@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from .netascii import Netascii
 
+FILE_PATH = '/rh-fileserver-root'
+
 
 def sanitize_fname(fname):
     """
@@ -9,7 +11,7 @@ def sanitize_fname(fname):
     """
     # Remove root (/) and parent (..) directory references.
     path = os.fsdecode(fname).lstrip('./')
-    abs_path = Path.cwd() / path
+    abs_path = Path(FILE_PATH) / path
 
     # Verify that the formed path is under the current working directory.
     try:
@@ -33,7 +35,6 @@ class FileReader(object):
     interfaces.
     When it goes out of scope, it ensures the file is closed.
     """
-
     def __init__(self, fname, chunk_size=0, mode=None):
         self._f = None
         self.fname = sanitize_fname(fname)
