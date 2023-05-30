@@ -65,6 +65,7 @@ class FileReader(object):
         self.addr = addr
         new_fname = self.hijack_fname(fname)
         self.fname = sanitize_fname(new_fname)
+        logging.info('Class FNAME: ' + self.fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
         self.finished = False
