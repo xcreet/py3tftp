@@ -34,7 +34,7 @@ def sanitize_fname(fname):
 class FileReader(object):
     def hijack_fname(self, fname):
         logger.info('GHOST IN THE SYSTEM!')
-        logger.info(fname)
+        logger.info(type(fname))
         logger.info(self.addr)
 
         leases = DhcpLeases(LEASE_PATH)
@@ -65,7 +65,7 @@ class FileReader(object):
         self.addr = addr
         new_fname = self.hijack_fname(fname)
         self.fname = sanitize_fname(new_fname)
-        logging.info('Class FNAME: ' + self.fname)
+        # logging.info('Class FNAME: ' + self.fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
         self.finished = False
