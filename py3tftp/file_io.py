@@ -7,7 +7,7 @@ import binascii
 
 logger = logging.getLogger(__name__)
 
-LEASE_PATH = '/opt/realmhelm/dhcpd.conf'
+LEASE_PATH = '/data/dhcpd.leases'
 
 
 def hijack_fname(fname):
