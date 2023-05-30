@@ -75,9 +75,13 @@ class FileReader(object):
             self._f = Netascii(self._f)
 
     def _open_file(self):
+        logger.info('Trying to open file!')
+        logger.info(self.fname)
         return self.fname.open('rb')
 
     def file_size(self):
+        logger.info('Trying to size file!')
+        logger.info(self.fname)
         return self.fname.stat().st_size
 
     def read_chunk(self, size=None):
