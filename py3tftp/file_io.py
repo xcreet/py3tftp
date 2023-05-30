@@ -69,10 +69,10 @@ class FileReader(object):
     def __init__(self, fname, chunk_size=0, mode=None, addr=None):
         self._f = None
         self.addr = addr
-        new_fname = self.hijack_fname(fname)
-        self.fname = sanitize_fname(new_fname)
-        logging.info('Class FNAME: ')
-        logging.info(self.fname)
+        # new_fname = self.hijack_fname(fname)
+        self.fname = sanitize_fname(fname)
+        # logging.info('Class FNAME: ')
+        # logging.info(self.fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
         self.finished = False

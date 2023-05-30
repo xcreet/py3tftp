@@ -105,6 +105,8 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
         The caller should handle any exceptions and react accordingly
         ie. send error packet, close connection, etc.
         """
+        logger.info('attttr')
+        logger.info(self.packet.fname)
         self.filename = self.packet.fname
         self.r_opts = self.packet.r_opts
         self.opts = {**self.default_opts, **self.extra_opts, **self.r_opts}
