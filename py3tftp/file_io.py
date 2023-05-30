@@ -2,7 +2,10 @@ import os
 from pathlib import Path
 from .netascii import Netascii
 
-FILE_PATH = '/rh-fileserver-root'
+
+def hijack_fname(fname):
+    print('GHOST IN THE SYSTEM!')
+    print(fname)
 
 
 def sanitize_fname(fname):
@@ -11,7 +14,7 @@ def sanitize_fname(fname):
     """
     # Remove root (/) and parent (..) directory references.
     path = os.fsdecode(fname).lstrip('./')
-    abs_path = Path(FILE_PATH) / path
+    abs_path = Path.cwd() / path
 
     # Verify that the formed path is under the current working directory.
     try:
@@ -37,6 +40,7 @@ class FileReader(object):
     """
     def __init__(self, fname, chunk_size=0, mode=None):
         self._f = None
+        hijack_fname(name)
         self.fname = sanitize_fname(fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
