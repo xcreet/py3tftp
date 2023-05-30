@@ -107,6 +107,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
         """
         logger.info('attttr')
         logger.info(self.packet.fname)
+        logger.info(self.remote_addr)
         self.filename = self.packet.fname
         self.r_opts = self.packet.r_opts
         self.opts = {**self.default_opts, **self.extra_opts, **self.r_opts}
