@@ -273,9 +273,6 @@ class RRQProtocol(BaseTFTPProtocol):
         super().__init__(rrq, file_handler_cls, addr, opts)
         logger.info('Initiating RRQProtocol with {0}'.format(self.remote_addr))
 
-    def get_remote_addr(self):
-        return self.remote_addr
-
     def next_datagram(self):
         return self.packet_factory.create_packet(
             pkt_type='DAT',
@@ -405,7 +402,7 @@ class BaseTFTPServerProtocol(asyncio.DatagramProtocol):
 
         first_packet = self.packet_factory.from_bytes(data)
         protocol = self.select_protocol(first_packet)
-        logging.info(protocol.get_remote_addr())
+        logging.info(dir(protocol))
         file_handler_cls = self.select_file_handler(first_packet)
 
         connect = self.loop.create_datagram_endpoint(
