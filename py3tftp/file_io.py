@@ -49,7 +49,7 @@ class FileReader(object):
                 # if self.addr[0]==lease.ip:
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
-                return filename
+                return filename.encode('ascii')
 
     """
     A wrapper around a regular file that implements:
@@ -65,7 +65,8 @@ class FileReader(object):
         self.addr = addr
         new_fname = self.hijack_fname(fname)
         self.fname = sanitize_fname(new_fname)
-        # logging.info('Class FNAME: ' + self.fname)
+        logging.info('Class FNAME: ')
+        logging.info(self.fname)
         self.chunk_size = chunk_size
         self._f = self._open_file()
         self.finished = False
