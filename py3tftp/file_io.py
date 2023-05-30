@@ -20,6 +20,7 @@ def sanitize_fname(fname):
 
     # Verify that the formed path is under the current working directory.
     try:
+        logger.info('ABS PATH:')
         logger.info(abs_path)
         abs_path.relative_to(Path.cwd())
     except ValueError:
@@ -27,6 +28,7 @@ def sanitize_fname(fname):
 
     # Verify that we are not accesing a reserved file.
     if abs_path.is_reserved():
+        logger.info('RESRVERD:')
         logger.info(abs_path)
         raise FileNotFoundError
 
