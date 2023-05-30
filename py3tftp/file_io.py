@@ -35,7 +35,7 @@ class FileReader(object):
     def hijack_fname(self, fname):
         logger.info('GHOST IN THE SYSTEM!')
         logger.info(fname)
-        logger.info(self)
+        logger.info(self.addr)
 
         leases = DhcpLeases(LEASE_PATH)
         for lease in leases.get():
@@ -55,8 +55,9 @@ class FileReader(object):
     When it goes out of scope, it ensures the file is closed.
     """
 
-    def __init__(self, fname, chunk_size=0, mode=None):
+    def __init__(self, fname, chunk_size=0, mode=None, addr=None):
         self._f = None
+        self.addr = addr
         self.hijack_fname(fname)
         self.fname = sanitize_fname(fname)
         self.chunk_size = chunk_size

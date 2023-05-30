@@ -434,4 +434,4 @@ class TFTPServerProtocol(BaseTFTPServerProtocol):
                 filename, opts, packet.mode)
         else:
             return lambda filename, opts: file_io.FileReader(
-                filename, opts, packet.mode)
+                filename, opts, packet.mode, addr)
