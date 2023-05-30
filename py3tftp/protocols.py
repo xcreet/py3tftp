@@ -117,7 +117,8 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
                 # if self.addr[0]==lease.ip:
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
-                return filename.encode('ascii')
+                logger.info(type(filename))
+                return filename.encode('utf8')
 
     def set_proto_attributes(self):
         """
