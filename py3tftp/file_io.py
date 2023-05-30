@@ -25,6 +25,7 @@ def sanitize_fname(fname):
         logger.info(Path.cwd())
         abs_path.relative_to(Path.cwd())
     except ValueError:
+        logger.info('VAUAERFSDF')
         raise FileNotFoundError
 
     # Verify that we are not accesing a reserved file.
