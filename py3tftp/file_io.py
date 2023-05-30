@@ -11,8 +11,8 @@ LEASE_PATH = '/opt/realmhelm/dhcpd.conf'
 
 
 def hijack_fname(fname):
-    logger.debug('GHOST IN THE SYSTEM!')
-    logger.debug(fname)
+    logger.info('GHOST IN THE SYSTEM!')
+    logger.info(fname)
 
     leases = DhcpLeases(LEASE_PATH)
     for lease in leases.get():
@@ -20,7 +20,7 @@ def hijack_fname(fname):
         if len(circuit_id_str) % 2 != 0:
             circuit_id_str = '0' + circuit_id_str
         circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
-        print(circuit_id)
+        logger.info(circuit_id)
 
 
 def sanitize_fname(fname):
