@@ -107,18 +107,16 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
     def hijack_fname(self, fname):
         leases = DhcpLeases(LEASE_PATH)
         for lease in leases.get():
-            circuit_id_str = lease.options['agent.circuit-id'].replace(':', '')
-            if len(circuit_id_str) % 2 != 0:
-                circuit_id_str = '0' + circuit_id_str
+            circuit_id_str = ''.join(
+                lease.options['agent.circuit-id'].split(':')[2:])
             circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
             logger.info('Requesting IP: ' + self.remote_addr[0])
-            logger.info('Found a lease for: ' + lease.ip)
+            logger.info('Found a lease for:' + lease.ip)
             if self.remote_addr[0] == '127.0.0.1':
                 # if self.addr[0]==lease.ip:
-                logger.info(type(circuit_id))
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
-                return b'CE-Tim-IE3000-Replacement.cfg'
+                return filename.encode('utf8')
 
     def set_proto_attributes(self):
         """
@@ -258,8 +256,6 @@ class WRQProtocol(BaseTFTPProtocol):
                                                  block_no=self.counter)
 
     def initialize_transfer(self):
-        logger.info('Brangus')
-        logger.info(self.filename)
         self.counter = 0
         self.file_handler = self.file_handler_cls(self.filename,
                                                   self.opts[b'blksize'])
