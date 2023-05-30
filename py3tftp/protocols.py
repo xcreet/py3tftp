@@ -112,12 +112,12 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
                 circuit_id_str = '0' + circuit_id_str
             circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
             logger.info('Requesting IP: ' + self.remote_addr[0])
-            logger.info('Found a lease for:' + lease.ip)
+            logger.info('Found a lease for: ' + lease.ip)
             if self.remote_addr[0] == '127.0.0.1':
                 # if self.addr[0]==lease.ip:
+                logger.info(type(circuit_id))
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
-                logger.info(type(filename))
                 return filename.encode('utf8')
 
     def set_proto_attributes(self):
@@ -126,11 +126,6 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
         The caller should handle any exceptions and react accordingly
         ie. send error packet, close connection, etc.
         """
-
-        logger.info('attttr')
-        logger.info(self.packet.fname)
-        logger.info(self.remote_addr)
-        logger.info(self.hijack_fname(self.packet.fname))
         self.filename = self.hijack_fname(self.packet.fname)
         self.r_opts = self.packet.r_opts
         self.opts = {**self.default_opts, **self.extra_opts, **self.r_opts}
