@@ -78,11 +78,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
             addr=self.remote_addr))
         try:
             self.set_proto_attributes()
-            try:
-                self.initialize_transfer()
-            except:
-                import sys
-                logger.info(sys.exc_info()[0])
+            self.initialize_transfer()
 
             if self.r_opts:
                 self.counter = 0
@@ -122,7 +118,7 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
                 logger.info(type(circuit_id))
                 filename = circuit_id + '.cfg'
                 logger.info('Serving filename: ' + filename)
-                return filename
+                return b'CE-Tim-IE3000-Replacement.cfg'
 
     def set_proto_attributes(self):
         """
@@ -262,6 +258,8 @@ class WRQProtocol(BaseTFTPProtocol):
                                                  block_no=self.counter)
 
     def initialize_transfer(self):
+        logger.info('Brangus')
+        logger.info(self.filename)
         self.counter = 0
         self.file_handler = self.file_handler_cls(self.filename,
                                                   self.opts[b'blksize'])
