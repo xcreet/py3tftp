@@ -453,7 +453,6 @@ class TFTPServerProtocol(BaseTFTPServerProtocol):
             raise ProtocolException('Received incompatible request, ignoring.')
 
     def select_file_handler(self, packet):
-        logger.info(addr)
         if packet.is_wrq():
             return lambda filename, opts: file_io.FileWriter(
                 filename, opts, packet.mode)
