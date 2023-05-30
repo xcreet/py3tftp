@@ -43,8 +43,8 @@ class FileReader(object):
             if len(circuit_id_str) % 2 != 0:
                 circuit_id_str = '0' + circuit_id_str
             circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
-            logger.info(lease.data)
-            logger.info(circuit_id)
+            logger.info(lease.ip)
+            # logger.info(circuit_id)
 
     """
     A wrapper around a regular file that implements:
