@@ -105,7 +105,8 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
             self.handle_err_pkt()
 
     def hijack_fname(self, fname):
-        logging.info('Starting Hijack of request for ' + fname)
+        logging.info('Starting Hijack of request for :')
+        logging.info(fname)
         leases = DhcpLeases(LEASE_PATH)
         for lease in leases.get():
             circuit_id_str = ''.join(
