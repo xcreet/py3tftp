@@ -109,8 +109,18 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
         logging.info(fname)
         leases = DhcpLeases(LEASE_PATH)
         for lease in leases.get():
-            circuit_id_str = ''.join(
-                lease.options['agent.circuit-id'].split(':')[2:])
+            print(lease)
+            id_str = lease.options.get('agent.circuit-id')
+            if not id_str:
+                id_str = lease.options.get('myagent.subscriber-id')
+
+            if not id_str:
+                logging.info(
+                    "Can't find a circuit or subscriber-id for this request, aborting"
+                )
+                return fname
+
+            circuit_id_str = ''.join(id_str.split(':')[2:])
             circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
             logger.info('Requesting IP: ' + self.remote_addr[0])
             logger.info('Found a lease for:' + lease.ip)
