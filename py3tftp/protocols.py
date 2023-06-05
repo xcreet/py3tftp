@@ -110,9 +110,10 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
         leases = DhcpLeases(LEASE_PATH)
         for lease in leases.get():
             print(str(lease))
-            id_str = lease.options.get('agent.circuit-id')
-            if not id_str:
-                id_str = lease.options.get('myagent.subscriber-id')
+            id_str = lease.options.get(
+                'agent.circuit-id') or lease.options.get(
+                    'myagent.subscriber-id', None) or lease.options.get(
+                        'myagent.subscriber-alt-id', None)
 
             if not id_str:
                 logging.info(
