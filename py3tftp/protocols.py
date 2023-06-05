@@ -121,6 +121,9 @@ class BaseTFTPProtocol(asyncio.DatagramProtocol):
                 )
                 return fname
 
+            print('Got ID Str:\n')
+            print(id_str)
+
             circuit_id_str = ''.join(id_str.split(':')[2:])
             circuit_id = binascii.unhexlify(circuit_id_str).decode('ascii')
             logger.info('Requesting IP: ' + self.remote_addr[0])
